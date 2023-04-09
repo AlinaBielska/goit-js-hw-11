@@ -7,6 +7,7 @@ const searchForm = document.querySelector('.search-form');
 // let searchedImage = e.target.value;
 
 const searchImages = async e => {
+    e.preventDefault();
     const params = {
     key: "35166786-6cff48c73f51fd457f4a9ef76",
     q: e.target.value,
@@ -15,7 +16,7 @@ const searchImages = async e => {
     safesearch: true,
     };
     try {
-// console.log(e.target.value);
+// console.log(e.value);
         const response = await axios.get(`https://pixabay.com/api/?${params}`);
         const photos = await response.json();
         showImages(photos);
@@ -54,7 +55,7 @@ const showImages = (photos) => {
 }
 
 
-searchForm.addEventListener("submit", searchImages());
+searchForm.addEventListener("submit", searchImages);
     
     
     
