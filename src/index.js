@@ -3,22 +3,29 @@ import Notiflix from 'notiflix';
 const axios = require('axios').default;
 const input = document.querySelector('input');
 const searchForm = document.querySelector('.search-form');
+const button = document.querySelector('button');
+const gallery = document.querySelector('.gallery');
+const loadMore = document.querySelector('.load-more');
 
-// let searchedImage = e.target.value;
+let page = 1;
+let per_page = 40;
 
 const searchImages = async e => {
     e.preventDefault();
-    const searchedWord = searchForm.elements.searchQuery.value;
-    const params = {
+    // const searchedWord = searchForm.elements.searchQuery.value;
+    const params = new URLSearchParams({
     key: "35166786-6cff48c73f51fd457f4a9ef76",
-    q: searchedWord,
+    // q: searchedWord,
     image_type: "photo",
     orientation: "horizontal",
     safesearch: true,
-    };
+    page: page,
+    per_page: per_page,
+    });
     
     try {
-        const response = await axios.get(`https://pixabay.com/api/?${params}`);
+        // const response = await axios.get(`https://pixabay.com/api/?${params}`);
+        const response = await axios.get(`https://pixabay.com/api/?${params}&q=` + searchForm.elements.searchQuery.value);
         const photos = await response.json();
         showImages(photos);
     } catch (error) {
@@ -51,7 +58,7 @@ const showImages = (photos) => {
                     </div >`
             )
             .join("");
-        searchForm.insertAdjacentHTML("afterend", markup);
+        gallery.innerHTML(markup);
     }
 }
 
