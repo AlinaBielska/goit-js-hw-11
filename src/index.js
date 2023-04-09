@@ -6,18 +6,17 @@ const searchForm = document.querySelector('.search-form');
 
 // let searchedImage = e.target.value;
 
-const searchImages = async (e) => {
+const searchImages = async e => {
+    const params = {
+    key: "35166786-6cff48c73f51fd457f4a9ef76",
+    q: e.target.value,
+    image_type: "photo",
+    orientation: "horizontal",
+    safesearch: true,
+    };
     try {
-console.log(e.target.value);
-const response = await axios.get('https://pixabay.com/api/', {
-    params: {
-        key: "35166786-6cff48c73f51fd457f4a9ef76",
-        q: e.target.value,
-        image_type: "photo",
-        orientation: "horizontal",
-        safesearch: true,
-    }
-})
+// console.log(e.target.value);
+        const response = await axios.get(`https://pixabay.com/api/?${params}`);
         const photos = await response.json();
         showImages(photos);
     } catch (error) {
@@ -55,7 +54,7 @@ const showImages = (photos) => {
 }
 
 
-input.addEventListener("submit", searchImages());
+searchForm.addEventListener("submit", searchImages());
     
     
     
