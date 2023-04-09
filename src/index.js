@@ -1,6 +1,6 @@
 import Notiflix from 'notiflix';
 
-const axios = require('axios');
+const axios = require('axios').default;
 const input = document.querySelector('input');
 const searchForm = document.querySelector('.search-form');
 
@@ -8,15 +8,16 @@ const searchForm = document.querySelector('.search-form');
 
 const searchImages = async e => {
     e.preventDefault();
+    const searchedWord = searchForm.elements.searchQuery.value;
     const params = {
     key: "35166786-6cff48c73f51fd457f4a9ef76",
-    q: e.target.value,
+    q: searchedWord,
     image_type: "photo",
     orientation: "horizontal",
     safesearch: true,
     };
+    
     try {
-// console.log(e.value);
         const response = await axios.get(`https://pixabay.com/api/?${params}`);
         const photos = await response.json();
         showImages(photos);
