@@ -11,34 +11,38 @@ const loadMore = document.querySelector('.load-more');
 let page = 1;
 let per_page = 40;
 
+gallery.classList.add('gallery__div');
+
 const searchImages = async e => {
-    // const searchedWord = searchForm.elements.searchQuery.value;
     const params = new URLSearchParams({
-    key: "35166786-6cff48c73f51fd457f4a9ef76",
-    // q: searchedWord,
-    image_type: "photo",
-    orientation: "horizontal",
-    safesearch: true,
-    page: page,
-    per_page: per_page,
+        key: "35166786-6cff48c73f51fd457f4a9ef76",
+        image_type: "photo",
+        orientation: "horizontal",
+        safesearch: true,
+        page: page,
+        per_page: per_page,
     });
 
     const response = await axios.get(`https://pixabay.com/api/?${params}&q=` + searchForm.elements.searchQuery.value);
-    // const photos = await response.json();
     return response;
-}
-
+};
 
 const showImages = (response) => {
-    const totalPhotos = response.data.total;
+    const totalHits = response.data.total;
     const photos = response.data.hits;
-    console.log(photos);
-    if (response.length === 0) {
+    const totalPages = Math.ceil(totalHits / per_page);
+    if (photos.length === 0) {
         Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
-    } else {
+    } else if (page > totalPages) {
+        loadMore.classList.remove('isVisible');
+        Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.");
+    }
+    else {
+        loadMore.classList.add('isVisible');
+        Notiflix.Notify.success(`"Hooray! We found ${totalHits} images."`)
         const markup = photos
-            .map((photo) => 
-                   `<div class= "photo-card">
+            .map((photo) =>
+                `<div class= "photo-card">
                     <img src="${photo.webformatURL}" alt="${photo.tags}" loading="lazy" />
                     <div class="info">
                         <p class="info-item">
@@ -56,14 +60,35 @@ const showImages = (response) => {
                     </div >`
             )
             .join("");
-        gallery.innerHTML = markup;
+        gallery.insertAdjacentHTML("beforeend", markup);
     }
-}
+};
 
 searchForm.addEventListener("submit", (e) => {
     e.preventDefault();
+    gallery.innerHTML = '';
     page = 1;
     searchImages()
-        .then((response) => showImages(response))
+        .then(
+            response => {
+                showImages(response);
+                page += 1;
+            })
+        .catch((error) => console.log(error))
+});
+
+loadMore.addEventListener("click", () => {
+    searchImages()
+        .then(
+            response => {
+                showImages(response);
+                page += 1;
+                const { height: cardHeight } = document
+                .querySelector(".gallery")
+                .firstElementChild.getBoundingClientRect();
+
+                window.scrollBy({top: cardHeight * 2, behavior: "smooth",
+});
+            })
         .catch((error) => console.log(error))
 });
