@@ -1,6 +1,9 @@
 import Notiflix from 'notiflix';
+import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
 
 const axios = require('axios').default;
+const lightbox = new SimpleLightbox('.gallery a');
 
 const input = document.querySelector('input');
 const searchForm = document.querySelector('.search-form');
@@ -43,7 +46,9 @@ const showImages = (response) => {
         const markup = photos
             .map((photo) =>
                 `<div class= "photo-card">
-                    <img src="${photo.webformatURL}" alt="${photo.tags}" loading="lazy" />
+                  <a href = "${photo.largeImageURL}">
+                    <img src="${photo.webformatURL}" alt="${photo.tags}" loading="lazy" /
+                  </a>
                     <div class="info">
                         <p class="info-item">
                             <b>Likes</b> ${photo.likes}
@@ -61,6 +66,7 @@ const showImages = (response) => {
             )
             .join("");
         gallery.insertAdjacentHTML("beforeend", markup);
+        lightbox.refresh();
     }
 };
 
@@ -92,3 +98,5 @@ loadMore.addEventListener("click", () => {
             })
         .catch((error) => console.log(error))
 });
+
+
