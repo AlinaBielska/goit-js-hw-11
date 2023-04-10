@@ -39,7 +39,7 @@ const showImages = (response) => {
     }
     else {
         loadMore.classList.add('isVisible');
-        Notiflix.Notify.success(`"Hooray! We found ${totalHits} images."`)
+        Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`)
         const markup = photos
             .map((photo) =>
                 `<div class= "photo-card">
