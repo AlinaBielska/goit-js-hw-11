@@ -25,7 +25,7 @@ const searchImages = async e => {
         per_page: perPage,
     });
 
-    response = await axios.get(`https://pixabay.com/api/?${params}&q=` + searchForm.elements.searchQuery.value);
+    response = await axios.get(`https://pixabay.com/api/?${params}&q=` + searchForm.searchQuery.value);
     await showImages(response);
     return 
 };
