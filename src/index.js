@@ -42,7 +42,6 @@ const showImages = (response) => {
     }
     else {
         loadMore.classList.add('isVisible');
-        Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`)
         const markup = photos
             .map((photo) =>
                 `<div class= "photo-card">
@@ -67,6 +66,9 @@ const showImages = (response) => {
             .join("");
         gallery.insertAdjacentHTML("beforeend", markup);
         lightbox.refresh();
+        if (page === 1) {
+            Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`) 
+        }
     }
 };
 
@@ -87,8 +89,8 @@ loadMore.addEventListener("click", () => {
     searchImages()
         .then(
             response => {
-                showImages(response);
                 page += 1;
+                showImages(response);
                 const { height: cardHeight } = document
                 .querySelector(".gallery")
                 .firstElementChild.getBoundingClientRect();
