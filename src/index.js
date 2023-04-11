@@ -5,14 +5,13 @@ import "simplelightbox/dist/simple-lightbox.min.css";
 const axios = require('axios').default;
 const lightbox = new SimpleLightbox('.gallery a');
 
-const input = document.querySelector('input');
 const searchForm = document.querySelector('.search-form');
-const button = document.querySelector('button');
 const gallery = document.querySelector('.gallery');
 const loadMore = document.querySelector('.load-more');
 
 let page = 1;
-let per_page = 40;
+let perPage = 40;
+let response;
 
 gallery.classList.add('gallery__div');
 
@@ -23,17 +22,17 @@ const searchImages = async e => {
         orientation: "horizontal",
         safesearch: true,
         page: page,
-        per_page: per_page,
+        per_page: perPage,
     });
 
-    const response = await axios.get(`https://pixabay.com/api/?${params}&q=` + searchForm.elements.searchQuery.value);
+    response = await axios.get(`https://pixabay.com/api/?${params}&q=` + searchForm.elements.searchQuery.value);
     return response;
 };
 
-const showImages = (response) => {
+const showImages = () => {
     const totalHits = response.data.total;
     const photos = response.data.hits;
-    const totalPages = Math.ceil(totalHits / per_page);
+    const totalPages = Math.ceil(totalHits / perPage);
     if (photos.length === 0) {
         Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
     } else if (page > totalPages) {
@@ -72,33 +71,20 @@ const showImages = (response) => {
     }
 };
 
-searchForm.addEventListener("submit", (e) => {
+searchForm.addEventListener("submit", async e => {
     e.preventDefault();
     gallery.innerHTML = '';
     page = 1;
-    searchImages()
-        .then(
-            response => {
-                showImages(response);
-                page += 1;
-            })
-        .catch((error) => console.log(error))
+    await searchImages();
+    await showImages(response);
 });
 
-loadMore.addEventListener("click", () => {
-    searchImages()
-        .then(
-            response => {
-                page += 1;
-                showImages(response);
-                const { height: cardHeight } = document
-                .querySelector(".gallery")
-                .firstElementChild.getBoundingClientRect();
-
-                window.scrollBy({top: cardHeight * 2, behavior: "smooth",
+loadMore.addEventListener("click", async e => {
+    await searchImages();
+    page += 1;
+    await showImages(response);
+    const { height: cardHeight } = document
+        .querySelector(".gallery")
+        .firstElementChild.getBoundingClientRect();
+    window.scrollBy({ top: cardHeight * 2, behavior: "smooth" })
 });
-            })
-        .catch((error) => console.log(error))
-});
-
-
