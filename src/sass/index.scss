@@ -27,12 +27,14 @@ p {
     font-size: 15px;
     line-height: 50%;
     letter-spacing: 0.03em;
+    text-decoration: none;
 }
 
 .info {
     display: flex;
     justify-content: space-around;
     padding-top: 12px;
+    text-decoration: none;
 }
 
 .info-item {
@@ -78,4 +80,8 @@ p {
     padding-inline: 20px;
     padding: 10px;
     margin: 30px;
+}
+
+a {
+    text-decoration: none;
 }
