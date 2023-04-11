@@ -80,8 +80,8 @@ searchForm.addEventListener("submit", async e => {
 });
 
 loadMore.addEventListener("click", async e => {
-    await searchImages();
     page += 1;
+    await searchImages();
     await showImages(response);
     const { height: cardHeight } = document
         .querySelector(".gallery")
