@@ -26,7 +26,8 @@ const searchImages = async e => {
     });
 
     response = await axios.get(`https://pixabay.com/api/?${params}&q=` + searchForm.elements.searchQuery.value);
-    return response;
+    await showImages(response);
+    return 
 };
 
 const showImages = () => {
@@ -75,16 +76,23 @@ searchForm.addEventListener("submit", async e => {
     e.preventDefault();
     gallery.innerHTML = '';
     page = 1;
-    await searchImages();
-    await showImages(response);
+    try {
+        await searchImages();
+    } catch (error) {
+        console.log(error);
+    }
+    
 });
 
 loadMore.addEventListener("click", async e => {
     page += 1;
-    await searchImages();
-    await showImages(response);
+    try {
+        await searchImages();
     const { height: cardHeight } = document
         .querySelector(".gallery")
         .firstElementChild.getBoundingClientRect();
     window.scrollBy({ top: cardHeight * 2, behavior: "smooth" })
+    } catch (error) {
+        console.log(error);
+    }
 });
